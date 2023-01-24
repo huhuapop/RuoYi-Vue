@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lms.mapper.LmsBooksMapper">
+    
+    <resultMap type="LmsBooks" id="LmsBooksResult">
+        <result property="id"    column="id"    />
+        <result property="bName"    column="b_name"    />
+        <result property="bAuthor"    column="b_author"    />
+        <result property="bPublisher"    column="b_publisher"    />
+        <result property="bVersion"    column="b_version"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectLmsBooksVo">
+        select id, b_name, b_author, b_publisher, b_version, create_by, create_time, update_by, update_time, remark from lms_books
+    </sql>
+
+    <select id="selectLmsBooksList" parameterType="LmsBooks" resultMap="LmsBooksResult">
+        <include refid="selectLmsBooksVo"/>
+        <where>  
+            <if test="bName != null  and bName != ''"> and b_name like concat('%', #{bName}, '%')</if>
+            <if test="bAuthor != null  and bAuthor != ''"> and b_author = #{bAuthor}</if>
+            <if test="bPublisher != null  and bPublisher != ''"> and b_publisher = #{bPublisher}</if>
+            <if test="bVersion != null  and bVersion != ''"> and b_version = #{bVersion}</if>
+        </where>
+    </select>
+    
+    <select id="selectLmsBooksById" parameterType="Long" resultMap="LmsBooksResult">
+        <include refid="selectLmsBooksVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLmsBooks" parameterType="LmsBooks" useGeneratedKeys="true" keyProperty="id">
+        insert into lms_books
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bName != null">b_name,</if>
+            <if test="bAuthor != null">b_author,</if>
+            <if test="bPublisher != null">b_publisher,</if>
+            <if test="bVersion != null">b_version,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bName != null">#{bName},</if>
+            <if test="bAuthor != null">#{bAuthor},</if>
+            <if test="bPublisher != null">#{bPublisher},</if>
+            <if test="bVersion != null">#{bVersion},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLmsBooks" parameterType="LmsBooks">
+        update lms_books
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bName != null">b_name = #{bName},</if>
+            <if test="bAuthor != null">b_author = #{bAuthor},</if>
+            <if test="bPublisher != null">b_publisher = #{bPublisher},</if>
+            <if test="bVersion != null">b_version = #{bVersion},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLmsBooksById" parameterType="Long">
+        delete from lms_books where id = #{id}
+    </delete>
+
+    <delete id="deleteLmsBooksByIds" parameterType="String">
+        delete from lms_books where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
